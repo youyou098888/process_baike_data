@@ -18,3 +18,4 @@ testing_data_result_file_name = '../data/res/kbqa/baike.testing-data.res'
 testing_data_not_match_result_file_name = '../data/res/kbqa/baike.testing-data.not-match.res'
 
 test_html = '../data/Baike/zhidao/s_0000.log'
+zhidao_testing_data_file_name = '../data/Baike/testing/zhidao_0000.testing-data'
