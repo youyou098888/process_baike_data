@@ -14,6 +14,7 @@ class HtmlFileProcess:
 		self.why_pairs = []
 
 	def parse_file(self, file_name):
+		print 'begin to parse file ', file_name
 		t1 = time.time()
 		fh = codecs.open(file_name, 'r', encoding='utf-8')
 		document = ''.join([x.strip('\n') for x in fh.readlines()])
@@ -62,6 +63,6 @@ class HtmlFileProcess:
 
 if __name__ == '__main__':
 	hfp = HtmlFileProcess()
-	hfp.parse_file(gl.test_html)
+	hfp.parse_file(gl.parse_html)
 	# hfp.show_first_n()
-	hfp.generate_qa_file(file_name=gl.zhidao_testing_data_file_name_why)
+	hfp.generate_qa_file()

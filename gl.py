@@ -17,6 +17,6 @@ training_data_result_file_name = '../data/res/kbqa/baike.training-data.res'
 testing_data_result_file_name = '../data/res/kbqa/baike.testing-data.res'
 testing_data_not_match_result_file_name = '../data/res/kbqa/baike.testing-data.not-match.res'
 
-test_html = '../data/Baike/zhidao/xaa'
+parse_html = '../data/Baike/zhidao/xaa'
 zhidao_testing_data_file_name = '../data/Baike/testing/zhidao_xaa.testing-data'
 zhidao_testing_data_file_name_why = '../data/Baike/testing/zhidao_xaa.why.testing-data'
