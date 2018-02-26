@@ -16,6 +16,7 @@ class PreProcessQuery:
     def get_chinese(self, word):
         index = word.find('>')
         res = word[index+1:].replace(' ', '').strip('\t').strip('\r')
+        res = res.replace('_百度知道', '')
         # print res
         return res
 
@@ -26,6 +27,7 @@ class PreProcessQuery:
         return jieba.cut_for_search(word)
 
     def process_question_answer_pairs(self, file_name):
+        print 'begin to process file ', file_name
         start = time()
         content = []
         with open(file_name, 'r') as f:
