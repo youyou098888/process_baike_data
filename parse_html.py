@@ -2,6 +2,7 @@
 import sys
 import gl
 import codecs
+import time
 reload(sys)
 sys.setdefaultencoding('utf-8')
 from bs4 import BeautifulSoup
@@ -15,7 +16,7 @@ class HtmlFileProcess:
 		fh = codecs.open(file_name, 'r', encoding='utf-8')
 		document = fh.read()
 		t2 = time.time()
-        print 'Loading html file consumed', t2 - t1, 'seconds'
+		print 'Loading html file consumed', t2 - t1, 'seconds'
 		question_raw = document.split('end raw')
 		for question_no, question_web in enumerate(question_raw):
 			soup = BeautifulSoup(question_web, "html.parser")
