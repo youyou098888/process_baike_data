@@ -67,57 +67,54 @@ if __name__ == '__main__':
         if len(scores) == 0:
             scores = [(1.0, tokens[0])]
 
-        pid = scores[0][1]
-        try:
-            info = kb.knowledge_about[pid]
-        except KeyError:
-            # print 'Unfortunately,' + pid + 'not fount in the knowledge base'
-            # return something
-            fh.write('<question id=' + str(qid + 1) + '>\t')
-            fh.write(qry.query_origin + '\n')
-            fh.write('<answer id=' + str(qid + 1) + '>\t')
-            fh.write('[THIS-IS-AN-ANSWER.]\n')
-            print qid+1, '[THIS-IS-AN-ANSWER.]'
-            fh.write('==================================================\n')
-            continue
-        # best_match, best_match_score = ('[ATTRIBUTE]', '[THIS-IS-AN-ANSWER.]'), 0.0
-        # for attr, entity2 in info:
-        #     for token in rest_token:  # tokens
-        #         tmp_score = sim.similarity(attr, token)
-        #         # print 'For pair (' + token + ', '+ attr + '), similarity = ', tmp_score
-        #         if tmp_score > best_match_score:
-        #             best_match_score = tmp_score
-        #             best_match = (attr, entity2)
-
-        # for attr, entity2 in info:
-        #     if attr in rest_token:
-        #         best_match = (attr, entity2)
-        #         break
-
         fh.write('<question id=' + str(qid + 1) + '>\t')
         fh.write(qry.query_origin + '\n')
-        fh.write('---------------------------------------------\n')
-        for idx, score in enumerate(scores):
-            fh.write('<subject id=' + str(qid + 1) + '-' + str(idx) + '>\t')
-            fh.write(score[1] + '\n')
-        fh.write('---------------------------------------------\n')
-        possile_answers = []
-        for idx, obj in enumerate(info):
-            attr, entity2 = obj
-            possile_answers.append(entity2)
-            fh.write('<predicate id=' + str(qid + 1) + '-' + str(idx) + '>\t')
-            fh.write(attr + '\n')
-            fh.write('<object id=' + str(qid + 1) + '-' + str(idx) + '>\t')
-            fh.write(entity2 + '\n')
+        # fh.write('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n')
 
-        scores = [(sim.similarity(qry.answer, answer), answer) for answer in possile_answers]
-        scores = sorted(scores, key=lambda s: -s[0])
-        fh.write('<answer id=' + str(qid + 1) + '>\t')
-        best_match, best_match_score = ('[ATTRIBUTE]', '[THIS-IS-AN-ANSWER.]'), 0.0
-        if len(scores) != 0:
-            best_match = scores[0][1]
-            best_match_score = scores[0][0]
-        fh.write(best_match + '\n')
+        for rank in xrange(min(len(scores), 30)):
+            pid = scores[rank][1]
+            # pid = scores[0][1]
+            try:
+                info = kb.knowledge_about[pid]
+            except KeyError:
+                # print 'Unfortunately,' + pid + 'not fount in the knowledge base'
+                # return something
+                fh.write('<question id=' + str(qid + 1) + '>\t')
+                fh.write(qry.query_origin + '\n')
+                fh.write('<answer id=' + str(qid + 1) + '>\t')
+                fh.write('[THIS-IS-AN-ANSWER.]\n')
+                print qid+1, '[THIS-IS-AN-ANSWER.]'
+                fh.write('==================================================\n')
+                continue
+        
+            if len(info) == 0:
+                fh.write('---------------------------------------------\n')
+                fh.write('<subject id=' + str(qid + 1) + '-' + str(rank) + '>\t')
+                fh.write(pid + '\n')
+                # fh.write('---------------------------------------------\n')
+            possile_answers = []
+            for idx, obj in enumerate(info):
+                attr, entity2 = obj
+                possile_answers.append(entity2)
+                fh.write('---------------------------------------------\n')
+                fh.write('<subject id=' + str(qid + 1) + '-' + str(rank) + '>\t')
+                fh.write(pid + '\n')
+                fh.write('<predicate id=' + str(qid + 1) + '-' + str(idx) + '>\t')
+                fh.write(attr + '\n')
+                fh.write('<object id=' + str(qid + 1) + '-' + str(idx) + '>\t')
+                fh.write(entity2 + '\n')
+                if idx > 30:
+                    break;
+
+            answer_scores = [(sim.similarity(qry.answer, answer), answer) for answer in possile_answers]
+            answer_scores = sorted(answer_scores, key=lambda s: -s[0])
+            fh.write('---------------------------------------------\n')
+            fh.write('<best match answer id=' + str(qid + 1) + '>\t')
+            best_match, best_match_score = ('[ATTRIBUTE]', '[THIS-IS-AN-ANSWER.]'), 0.0
+            if len(answer_scores) != 0:
+                best_match = answer_scores[0][1]
+                best_match_score = answer_scores[0][0]
+            fh.write(best_match + '\n')
         # print qid+1, best_match[1]
         fh.write('==================================================\n')
 

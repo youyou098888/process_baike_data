@@ -21,7 +21,7 @@ class KnowledgeBase:
                            '考', '考考', '考你', '是', '记得', '的', '得', '这', '哪里']
 
     def load_knowledge_base(self, knowledge_file_name=gl.knowledge_base_file_name):
-        # Typically, it takes ~500s to load this file.
+        # Typically, it takes ~1630s 30min to load baike.triples.kb this file.
         t1 = time.time()
         fh = codecs.open(knowledge_file_name, 'r', encoding='utf-8')
         total_line_number, skipped = 0, 0
@@ -82,6 +82,7 @@ class KnowledgeBase:
 
     def generate_mention2id(self):
         # this might take about ~1800s, 30min
+        print 'begin to generate mention2id file'
         t1 = time.time()
         mention_2_id_file = open(gl.knowledge_base_mention_file_name, 'w')
         for entity in self.knowledge_about.keys():
