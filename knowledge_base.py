@@ -18,7 +18,7 @@ class KnowledgeBase:
                            '什么', '了解', '能', '告诉', '我', '没', '没有', '呃', '…', '想', '电影', '游戏', '音乐',
                            '小说', '过', '去', '请教', '一下', '你们', '玩', '给', '大家', '你们', '玩', '给', '怎么',
                            '首', '认识', '还有', '与', '人', '家', '啥', '把', '有人', '请问', '时候', '很', '好奇',
-                           '考', '考考', '考你', '是', '记得', '的', '得', '这', '哪里']
+                           '考', '考考', '考你', '是', '记得', '的', '得', '这是', '哪里', '意思', '如何']
 
     def load_knowledge_base(self, knowledge_file_name=gl.knowledge_base_file_name):
         # Typically, it takes ~1630s 30min to load baike.triples.kb this file.
@@ -105,7 +105,7 @@ class KnowledgeBase:
 if __name__ == '__main__':
     kb = KnowledgeBase()
     kb.load_knowledge_base()
-    # kb.generate_mention2id()
+    kb.generate_mention2id()
     mid = mention_id.MentionID()
     mid.load_mention_2_id()
     while True:

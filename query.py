@@ -1,6 +1,6 @@
 import gl
 import codecs
-
+import time
 
 class Query:
     def __init__(self, query_origin, answer, tokens, mentions):
@@ -15,7 +15,8 @@ class QueryList:
         self.query_list = []
 
     def read_query_file(self, file_name=gl.training_data_split_file_name):
-        print file_name
+        print 'read question file', file_name
+        t1 = time.time()
         fh = codecs.open(file_name, 'r', encoding='utf-8')
         lines = fh.readlines()
         for i in range(0, len(lines), 5):
@@ -27,6 +28,8 @@ class QueryList:
             query_tmp = Query(query, ans, tokens, mentions)
             self.query_list.append(query_tmp)
         fh.close()
+        t2 = time.time()
+        print 'Finish reading question file ', file_name, ' consumed', t2 - t1, 'seconds'
         return self.query_list
 
 # test

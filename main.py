@@ -26,6 +26,7 @@ if __name__ == '__main__':
     # training phase
 
     # Step3: load questions
+    print 'begin to load questions'
     query_list = query.QueryList()
     query_list.read_query_file(gl.testing_data_split_file_name)
     

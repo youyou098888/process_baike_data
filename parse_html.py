@@ -41,9 +41,10 @@ class HtmlFileProcess:
 					for answer in answer_div.findAll("pre", {"class": 'recommend-text'}):
 						best_answer_txt = answer.get_text()
 						found = True
-			if '怎么' in question_title_txt:
+			if '怎么' in question_title_txt or '为什么' in question_title_txt:
 				self.why_pairs.append({'question': question_title_txt, 'answer': best_answer_txt})
-			self.qa_pairs.append({'question': question_title_txt, 'answer': best_answer_txt})
+			else:
+				self.qa_pairs.append({'question': question_title_txt, 'answer': best_answer_txt})
 		t3 = time.time()
 		print 'Processing html file consumed', t3 - t2, 'seconds'
 		
