@@ -8,8 +8,8 @@ zhidao_testing_data_file_name = '../data/Baike/testing/zhidao_xaa.testing-data'
 zhidao_testing_data_file_name_factoid = '../data/Baike/testing/zhidao_xaa.fact.testing-data'
 zhidao_testing_data_file_name_why = '../data/Baike/testing/zhidao_xaa.why.testing-data'
 # processed data with jieba
-training_data_split_file_name = '../data/Baike/process/baike.process.data'
-testing_data_split_file_name = '../data/Baike/process/baike.test.process.data'
+training_data_split_file_name = '../data/Baike/process/zhidao.process.data'
+testing_data_split_file_name = '../data/Baike/process/zhidao.test.process.data'
 
 embedding_file_name = '../data/Baike/model/dbqa/dbqa.word2vec'  # .txt
 # result file
