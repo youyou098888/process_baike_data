@@ -11,8 +11,8 @@ from bs4 import BeautifulSoup
 class HtmlFileProcess:
 	def __init__(self):
 		self.qa_pairs = []
-		self.fact_word = ['是什么', '什么是', '什么叫', '是谁']
-		self.non_fact_word = ['什么歌', '为什么', '怎么']
+		self.fact_word = ['是什么', '什么是', '什么叫', '是谁', '什么人']
+		self.non_fact_word = ['什么歌', '为什么', '怎么', '什么关系', '什么区别']
 
 	def check_factoid(self, question):
 		factoid = False

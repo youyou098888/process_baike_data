@@ -63,9 +63,9 @@ if __name__ == '__main__':
         tokens = ''.join(qry.tokens)
         scores = [(sim.edit_distance(tokens, pid), pid) for pid in possible_ids]
         scores = sorted(scores, key=lambda s: s[0])
-        for item in scores:
-            print 'Score for ' + item[1] + ':', item[0]
-        raw_input('*****************\n')
+        # for item in scores:
+        #     print 'Score for ' + item[1] + ':', item[0]
+        # raw_input('*****************\n')
 
         if len(scores) == 0:
             scores = [(0, tokens[0])]
@@ -98,16 +98,17 @@ if __name__ == '__main__':
             possile_answers = []
             for idx, obj in enumerate(info):
                 attr, entity2 = obj
-                possile_answers.append(entity2)
-                fh.write('---------------------------------------------\n')
-                fh.write('<subject id=' + str(qid + 1) + '-' + str(rank) + '>\t')
-                fh.write(pid + '\n')
-                fh.write('<predicate id=' + str(qid + 1) + '-' + str(idx) + '>\t')
-                fh.write(attr + '\n')
-                fh.write('<object id=' + str(qid + 1) + '-' + str(idx) + '>\t')
-                fh.write(entity2 + '\n')
-                if idx > 30:
-                    break;
+                if attr == 'BaiduCARD': # only extract BaiduCard relation
+                    possile_answers.append(entity2)
+                    fh.write('---------------------------------------------\n')
+                    fh.write('<subject id=' + str(qid + 1) + '-' + str(rank) + '>\t')
+                    fh.write(pid + '\n')
+                    fh.write('<predicate id=' + str(qid + 1) + '-' + str(idx) + '>\t')
+                    fh.write(attr + '\n')
+                    fh.write('<object id=' + str(qid + 1) + '-' + str(idx) + '>\t')
+                    fh.write(entity2 + '\n')
+                    if idx > 30:
+                        break;
 
             answer_scores = [(sim.similarity(qry.answer, answer), answer) for answer in possile_answers]
             answer_scores = sorted(answer_scores, key=lambda s: -s[0])
