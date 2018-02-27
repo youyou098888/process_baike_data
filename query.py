@@ -1,6 +1,7 @@
 import gl
 import codecs
 import time
+import jieba
 
 class Query:
     def __init__(self, query_origin, answer, tokens, mentions):
@@ -8,6 +9,14 @@ class Query:
         self.answer = answer  
         self.tokens = tokens
         self.mentions = mentions
+
+    def valid_pid(self, entity):
+        valid = True
+        entities = jieba.cut_for_search(entity)
+        for item in entities:
+            if item not in self.query_origin:
+                valid = False
+        return valid
 
 
 class QueryList:

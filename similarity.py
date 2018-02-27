@@ -7,6 +7,7 @@ import editdistance
 
 class Similarity:
     def __init__(self, embedding_file_name=gl.embedding_file_name):
+        self.fact_word = ['是什么', '什么是', '什么叫', '是谁']
         self.word_embedding = {}
         fh = codecs.open(embedding_file_name, 'r', encoding='utf-8')
         for line in fh.readlines():
@@ -20,6 +21,9 @@ class Similarity:
         return so if sw < 1e-6 else lbda * so + (1 - lbda) * sw
 
     def edit_distance(self, w1, w2):
+        for x in self.fact_word:
+            w1 = w1.replace(x, '')
+            w2 = w2.replace(x, '')
         return editdistance.eval(w1, w2)
 
     def similarity_overlap(self, w1, w2):

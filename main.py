@@ -46,6 +46,8 @@ if __name__ == '__main__':
             possible_ids = mid.find_id_set(entity)
             for pid in possible_ids:
                 # print 'possible id:(' + pid + ')' + str(len(pid))
+                if not qry.valid_pid(pid):
+                    continue
                 try:
                     qry_possible_id_dict[qid+1].append(pid)
                 except KeyError:
@@ -61,9 +63,9 @@ if __name__ == '__main__':
         tokens = ''.join(qry.tokens)
         scores = [(sim.edit_distance(tokens, pid), pid) for pid in possible_ids]
         scores = sorted(scores, key=lambda s: s[0])
-        # for item in scores:
-        #     print 'Score for ' + item[1] + ':', item[0]
-        # raw_input('*****************\n')
+        for item in scores:
+            print 'Score for ' + item[1] + ':', item[0]
+        raw_input('*****************\n')
 
         if len(scores) == 0:
             scores = [(0, tokens[0])]
