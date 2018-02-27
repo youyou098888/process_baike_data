@@ -3,7 +3,7 @@ from __future__ import division
 import gl
 import numpy as np
 import codecs
-
+import editdistance
 
 class Similarity:
     def __init__(self, embedding_file_name=gl.embedding_file_name):
@@ -18,6 +18,9 @@ class Similarity:
     def similarity(self, w1, w2, lbda=0.6):
         so, sw = self.similarity_overlap(w1, w2), self.similarity_word_vector(w1, w2)
         return so if sw < 1e-6 else lbda * so + (1 - lbda) * sw
+
+    def edit_distance(self, w1, w2):
+        return editdistance.eval(w1, w2)
 
     def similarity_overlap(self, w1, w2):
         s1 = set(w1)

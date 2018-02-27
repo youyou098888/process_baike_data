@@ -4,6 +4,7 @@ import mention_id
 import jieba
 import jieba.posseg as pseg
 import similarity
+import editdistance
 
 __author__ = 'yuyang'
 
@@ -25,3 +26,6 @@ for item in pseg.cut(u'干酪菌属属于什么亚纲？'):
 # sent = u'江陵	之	战	是	哪	一	年	爆发	的'.split('\t')
 # for token in sent:
 #     print token
+print editdistance.eval('进修学校', '湖南进修学校')
+print editdistance.eval('进修学校', '学校进修')
+print editdistance.eval('进修学校', '进修学校')

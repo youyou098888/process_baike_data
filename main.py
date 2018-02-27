@@ -59,14 +59,14 @@ if __name__ == '__main__':
         # remove duplicate possible_ids because different entities might have the same possible_id
         possible_ids = list(set(qry_possible_id_dict[qid+1]))
         tokens = ''.join(qry.tokens)
-        scores = [(sim.similarity(tokens, pid), pid) for pid in possible_ids]
-        scores = sorted(scores, key=lambda s: -s[0])
+        scores = [(sim.edit_distance(tokens, pid), pid) for pid in possible_ids]
+        scores = sorted(scores, key=lambda s: s[0])
         # for item in scores:
         #     print 'Score for ' + item[1] + ':', item[0]
         # raw_input('*****************\n')
 
         if len(scores) == 0:
-            scores = [(1.0, tokens[0])]
+            scores = [(0, tokens[0])]
 
         fh.write('<question id=' + str(qid + 1) + '>\t')
         fh.write(qry.query_origin + '\n')
