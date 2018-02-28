@@ -98,7 +98,8 @@ if __name__ == '__main__':
             
             for idx, obj in enumerate(info):
                 attr, entity2 = obj
-                if attr == 'BaiduCARD': # only extract BaiduCard relation
+                if 1:
+                # if attr == 'BaiduCARD': # only extract BaiduCard relation
                     possile_answers.append({'pid': pid, 'answer': entity2})
                     fh.write('---------------------------------------------\n')
                     fh.write('<subject id=' + str(qid + 1) + '-' + str(rank) + '>\t')
