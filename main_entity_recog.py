@@ -114,20 +114,25 @@ if __name__ == '__main__':
         # for item in answer_scores:
         #     print 'Score for ' + item[1]['answer'] + ':', item[0]
         answer_scores = sorted(answer_scores, key=lambda s: -s[0])
-        fh.write('---------------------------------------------\n')
-        fh.write('<best match subject id=' + str(qid + 1) + '>\t')
-        if len(answer_scores) != 0:
-            fh.write(answer_scores[0][1]['pid'] + '\n')
-        else:
-            fh.write('[NO-SUBJECT.]' + '\n')
-        fh.write('<best match answer id=' + str(qid + 1) + '>\t')
         best_match, best_match_score = '[THIS-IS-AN-ANSWER.]', 0.0
         if len(answer_scores) != 0:
             best_match = answer_scores[0][1]['answer']
             best_match_score = answer_scores[0][0]
-        fh.write(best_match + '\n')
-        fh.write('<best match score id=' + str(qid + 1) + '>\t')
-        fh.write(str(best_match_score) + '\n')
+
+
+        fh.write('---------------------------------------------\n')
+        
+        if len(answer_scores) != 0 and best_match_score !=0:
+            fh.write('<best match subject id=' + str(qid + 1) + '>\t')
+            fh.write(answer_scores[0][1]['pid'] + '\n')
+            fh.write('<best match answer id=' + str(qid + 1) + '>\t')
+        
+            fh.write(best_match + '\n')
+            fh.write('<best match score id=' + str(qid + 1) + '>\t')
+            fh.write(str(best_match_score) + '\n')
+        else:
+            fh.write('[NO-SUBJECT.]' + '\n')
+        
         # print qid+1, best_match[1]
         fh.write('==================================================\n')
 

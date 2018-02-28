@@ -15,6 +15,7 @@ class MentionID:
 
     def load_mention_2_id(self, knowledge_base_mention_file_name=gl.knowledge_base_mention_file_name):
         # Typically, it takes ~100s to load this file.
+        print 'begin to load mention2id files', knowledge_base_mention_file_name
         t1 = time.time()
         fh = codecs.open(knowledge_base_mention_file_name, 'r', encoding='utf-8')
         for line_no, line in enumerate(fh.readlines()):

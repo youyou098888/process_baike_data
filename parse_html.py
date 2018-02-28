@@ -1,9 +1,11 @@
 # coding=utf-8
 import sys
+import os
 import gl
 import codecs
 import time
 import re
+from string import ascii_lowercase
 reload(sys)
 sys.setdefaultencoding('utf-8')
 from bs4 import BeautifulSoup
@@ -26,6 +28,7 @@ class HtmlFileProcess:
 		return factoid
 
 	def parse_file(self, file_name):
+		self.qa_pairs = []
 		print 'begin to parse file ', file_name
 		t1 = time.time()
 		fh = codecs.open(file_name, 'r', encoding='utf-8')
@@ -80,6 +83,11 @@ class HtmlFileProcess:
 
 if __name__ == '__main__':
 	hfp = HtmlFileProcess()
-	hfp.parse_file(file_name=gl.parse_html)
-	# hfp.show_first_n()
-	hfp.generate_qa_file(file_name=gl.zhidao_testing_data_file_name_factoid)
+	for x in ascii_lowercase:
+		html_file_name = gl.parse_html_folder + 'xa' + x
+		target_file_name = gl.zhidao_testing_data_folder_name + 'zhidao_xa' + x + '.fact.testing-data'
+		if os.path.isfile(html_file_name):
+			print html_file_name, target_file_name
+			hfp.parse_file(file_name=html_file_name)
+			# hfp.show_first_n()
+			hfp.generate_qa_file(file_name=target_file_name)
