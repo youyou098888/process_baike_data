@@ -114,7 +114,7 @@ if __name__ == '__main__':
             answer_scores = sorted(answer_scores, key=lambda s: -s[0])
             fh.write('---------------------------------------------\n')
             fh.write('<best match answer id=' + str(qid + 1) + '>\t')
-            best_match, best_match_score = ('[ATTRIBUTE]', '[THIS-IS-AN-ANSWER.]'), 0.0
+            best_match, best_match_score = '[THIS-IS-AN-ANSWER.]', 0.0
             if len(answer_scores) != 0:
                 best_match = answer_scores[0][1]
                 best_match_score = answer_scores[0][0]
