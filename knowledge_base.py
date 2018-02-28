@@ -23,6 +23,7 @@ class KnowledgeBase:
 
     def load_knowledge_base(self, knowledge_file_name=gl.knowledge_base_file_name):
         # Typically, it takes ~1630s 30min to load baike.triples.kb this file.
+        print 'begin to load kb', knowledge_file_name
         t1 = time.time()
         fh = codecs.open(knowledge_file_name, 'r', encoding='utf-8')
         total_line_number, skipped = 0, 0
