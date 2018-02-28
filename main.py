@@ -35,7 +35,7 @@ if __name__ == '__main__':
 
     sim = similarity.Similarity()
     for qid, qry in enumerate(query_list.query_list):
-        # print 'query id:', qid+1
+        print 'query id:', qid+1
 
         # print '||||'.join(qry.tokens)
         # print 'entity:' + entity + 'len(entity):' + str(len(entity))
@@ -73,7 +73,7 @@ if __name__ == '__main__':
         fh.write('<question id=' + str(qid + 1) + '>\t')
         fh.write(qry.query_origin + '\n')
         # fh.write('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n')
-
+        possile_answers = []
         for rank in xrange(min(len(scores), 30)):
             pid = scores[rank][1]
             # pid = scores[0][1]
@@ -95,7 +95,7 @@ if __name__ == '__main__':
                 fh.write('<subject id=' + str(qid + 1) + '-' + str(rank) + '>\t')
                 fh.write(pid + '\n')
                 # fh.write('---------------------------------------------\n')
-            possile_answers = []
+            
             for idx, obj in enumerate(info):
                 attr, entity2 = obj
                 if attr == 'BaiduCARD': # only extract BaiduCard relation
@@ -110,15 +110,15 @@ if __name__ == '__main__':
                     if idx > 30:
                         break;
 
-            answer_scores = [(sim.similarity(qry.answer, answer), answer) for answer in possile_answers]
-            answer_scores = sorted(answer_scores, key=lambda s: -s[0])
-            fh.write('---------------------------------------------\n')
-            fh.write('<best match answer id=' + str(qid + 1) + '>\t')
-            best_match, best_match_score = '[THIS-IS-AN-ANSWER.]', 0.0
-            if len(answer_scores) != 0:
-                best_match = answer_scores[0][1]
-                best_match_score = answer_scores[0][0]
-            fh.write(best_match + '\n')
+        answer_scores = [(sim.similarity(qry.answer, answer), answer) for answer in possile_answers]
+        answer_scores = sorted(answer_scores, key=lambda s: -s[0])
+        fh.write('---------------------------------------------\n')
+        fh.write('<best match answer id=' + str(qid + 1) + '>\t')
+        best_match, best_match_score = '[THIS-IS-AN-ANSWER.]', 0.0
+        if len(answer_scores) != 0:
+            best_match = answer_scores[0][1]
+            best_match_score = answer_scores[0][0]
+        fh.write(best_match + '\n')
         # print qid+1, best_match[1]
         fh.write('==================================================\n')
 

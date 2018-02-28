@@ -12,7 +12,8 @@ class HtmlFileProcess:
 	def __init__(self):
 		self.qa_pairs = []
 		self.fact_word = ['是什么', '什么是', '什么叫', '是谁', '什么人']
-		self.non_fact_word = ['什么歌', '为什么', '怎么', '什么关系', '什么区别']
+		self.non_fact_word = ['什么歌', '为什么', '怎么', '什么关系', '什么区别', '最著名', 
+							  '最快', '最近', '最好', '最新', '原因是', '什么原因']
 
 	def check_factoid(self, question):
 		factoid = False

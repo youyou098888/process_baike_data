@@ -11,11 +11,14 @@ class Query:
         self.mentions = mentions
 
     def valid_pid(self, entity):
+        # every word in entity in kb should be the substring of the question(strict mode) 
         valid = True
         entities = jieba.cut_for_search(entity)
         for item in entities:
             if item not in self.query_origin:
                 valid = False
+        if entity not in self.query_origin:
+            valid = False
         return valid
 
 

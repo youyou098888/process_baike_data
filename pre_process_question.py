@@ -48,14 +48,6 @@ class PreProcessQuery:
 
 if __name__ == '__main__':
     ppq = PreProcessQuery()
-    training_question_answer_pairs = ppq.process_question_answer_pairs(file_name=gl.training_data_file_name)
-    with open(gl.training_data_split_file_name, 'w') as f:
-        for pair in training_question_answer_pairs:
-            f.write(pair[0] + '\n')
-            f.write(pair[1] + '\n')
-            f.write(pair[2] + '\n')
-            f.write(pair[3] + '\n')
-            f.write("==================================================\n")
     testing_question_answer_pairs = ppq.process_question_answer_pairs(file_name=gl.zhidao_testing_data_file_name_factoid)
     with open(gl.testing_data_split_file_name, 'w') as f:
         for pair in testing_question_answer_pairs:
