@@ -98,7 +98,8 @@ if __name__ == '__main__':
             
             for idx, obj in enumerate(info):
                 attr, entity2 = obj
-                if attr == 'BaiduCARD': # only extract BaiduCard relation
+                if 1:
+                # if attr == 'BaiduCARD': # only extract BaiduCard relation
                     possile_answers.append({'pid': pid, 'answer': entity2})
                     fh.write('---------------------------------------------\n')
                     fh.write('<subject id=' + str(qid + 1) + '-' + str(rank) + '>\t')
@@ -111,6 +112,8 @@ if __name__ == '__main__':
                         break;
 
         answer_scores = [(sim.similarity(qry.answer, item['answer']), item) for item in possile_answers]
+        # for item in answer_scores:
+        #     print 'Score for ' + item[1]['answer'] + ':', item[0]
         answer_scores = sorted(answer_scores, key=lambda s: -s[0])
         fh.write('---------------------------------------------\n')
         fh.write('<best match subject id=' + str(qid + 1) + '>\t')
@@ -124,6 +127,8 @@ if __name__ == '__main__':
             best_match = answer_scores[0][1]['answer']
             best_match_score = answer_scores[0][0]
         fh.write(best_match + '\n')
+        fh.write('<best match score id=' + str(qid + 1) + '>\t')
+        fh.write(str(best_match_score) + '\n')
         # print qid+1, best_match[1]
         fh.write('==================================================\n')
 
