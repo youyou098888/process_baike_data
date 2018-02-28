@@ -35,24 +35,29 @@ class HtmlFileProcess:
 		question_raw = document.split('end raw')
 		for question_no, question_web in enumerate(question_raw):
 			if question_no % 100 == 0:
-				print 'Processed', question_no, 'lines'
-			soup = BeautifulSoup(question_web, "html.parser")
+				print 'Processed', question_no, 'pages'
+			soup = BeautifulSoup(question_web, 'html.parser')
 			if soup.title is None:
 				continue
 			question_title_txt = soup.title.string
-			best_answers_div = soup.findAll("div", {"class": "wgt-best"})
+			best_answers_div = soup.findAll('div', {'class': 'wgt-best'})
 			best_answer_txt = 'No Best Answer Found'
 			found = False
 			for answer_div in best_answers_div:
-				for answer in answer_div.findAll("pre", {"class": 'best-text'}):
+				for answer in answer_div.findAll('pre', {'class': 'best-text'}):
 					best_answer_txt = answer.get_text()
 					found = True
 			if not found:
-				best_answers_div = soup.findAll("div", {"class": "wgt-recommend"})
+				best_answers_div = soup.findAll('div', {'class': 'wgt-recommend'})
 				for answer_div in best_answers_div:
-					for answer in answer_div.findAll("pre", {"class": 'recommend-text'}):
+					for answer in answer_div.findAll('pre', {'class': 'recommend-text'}):
 						best_answer_txt = answer.get_text()
 						found = True
+			if not found:
+				quality_answer_div = soup.findAll('div', {'class': 'quality-content-detail'})
+				for answer_div in quality_answer_div:
+					best_answer_txt = answer_div.get_text()
+					found = True
 			if self.check_factoid(question_title_txt):
 				self.qa_pairs.append({'question': question_title_txt, 'answer': best_answer_txt})
 		t3 = time.time()
