@@ -1,10 +1,12 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import sys
+import os
 from time import time
 import gl
 import jieba
 import jieba.posseg as pseg
+from string import ascii_lowercase
 
 reload(sys)
 sys.setdefaultencoding('utf8')
@@ -48,11 +50,19 @@ class PreProcessQuery:
 
 if __name__ == '__main__':
     ppq = PreProcessQuery()
-    testing_question_answer_pairs = ppq.process_question_answer_pairs(file_name=gl.zhidao_testing_data_file_name_factoid)
-    with open(gl.testing_data_split_file_name, 'w') as f:
-        for pair in testing_question_answer_pairs:
-            f.write(pair[0] + '\n')
-            f.write(pair[1] + '\n')
-            f.write(pair[2] + '\n')
-            f.write(pair[3] + '\n')
-            f.write("==================================================\n")
+    for fidx in xrange(20):
+        folder_idx = 's_' + str("%04d" % fidx) + '/'
+        for x in ascii_lowercase:
+            factoid_file_name = gl.zhidao_testing_data_folder_name + folder_idx + 'zhidao_xa' + x + '.fact.testing-data'
+            processed_file_name = gl.processed_data_split_file_folder + folder_idx + 'zhidao_xa' + x + '.process-data'
+            if not os.path.isfile(factoid_file_name):
+                continue
+            testing_question_answer_pairs = ppq.process_question_answer_pairs(file_name=factoid_file_name)
+            
+            with open(processed_file_name, 'w') as f:
+                for pair in testing_question_answer_pairs:
+                    f.write(pair[0] + '\n')
+                    f.write(pair[1] + '\n')
+                    f.write(pair[2] + '\n')
+                    f.write(pair[3] + '\n')
+                    f.write("==================================================\n")

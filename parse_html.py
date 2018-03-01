@@ -15,7 +15,7 @@ class HtmlFileProcess:
 		self.qa_pairs = []
 		self.fact_word = ['是什么', '什么是', '什么叫', '是谁', '什么人']
 		self.non_fact_word = ['什么歌', '为什么', '怎么', '什么关系', '什么区别', '最著名', 
-							  '最快', '最近', '最好', '最新', '原因是', '什么原因']
+							  '最快', '最近', '最好', '最新', '原因是', '什么原因', '区别是']
 
 	def check_factoid(self, question):
 		factoid = False
@@ -83,11 +83,20 @@ class HtmlFileProcess:
 
 if __name__ == '__main__':
 	hfp = HtmlFileProcess()
-	for x in ascii_lowercase:
-		html_file_name = gl.parse_html_folder + 'xa' + x
-		target_file_name = gl.zhidao_testing_data_folder_name + 'zhidao_xa' + x + '.fact.testing-data'
-		if os.path.isfile(html_file_name):
-			print html_file_name, target_file_name
-			hfp.parse_file(file_name=html_file_name)
-			# hfp.show_first_n()
-			hfp.generate_qa_file(file_name=target_file_name)
+	for fidx in xrange(20):
+		folder_idx = 's_' + str("%04d" % fidx) + '/'
+		for x in ascii_lowercase:
+			html_file_name = gl.parse_html_folder + folder_idx + 'xa' + x
+			target_file_name = gl.zhidao_testing_data_folder_name + folder_idx + 'zhidao_xa' + x + '.fact.testing-data'
+			if not os.path.exists(gl.zhidao_testing_data_folder_name + folder_idx):
+				os.makedirs(gl.zhidao_testing_data_folder_name + folder_idx)
+			if os.path.isfile(target_file_name):
+				# already generate this file pass
+				continue
+			if os.path.isfile(html_file_name):
+				print html_file_name, target_file_name
+				hfp.parse_file(file_name=html_file_name)
+				# hfp.show_first_n()
+				hfp.generate_qa_file(file_name=target_file_name)
+			else:
+				print html_file_name, 'not exit'

@@ -4,6 +4,7 @@ import gl
 import numpy as np
 import codecs
 import editdistance
+from bs4 import BeautifulSoup
 
 class Similarity:
     def __init__(self, embedding_file_name=gl.embedding_file_name):
@@ -32,7 +33,9 @@ class Similarity:
         return len(s1 & s2) / len(s1 | s2)
 
     def similarity_customize_overlap(self, w1, w2):
+        w1 = BeautifulSoup(w1, 'html.parser').text
         s1 = set(w1) # length of subject in kb
+        w2 = BeautifulSoup(w2, 'html.parser').text
         s2 = set(w2)
         return len(s1 & s2) / len(s1)
 
