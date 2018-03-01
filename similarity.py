@@ -31,6 +31,11 @@ class Similarity:
         s2 = set(w2)
         return len(s1 & s2) / len(s1 | s2)
 
+    def similarity_customize_overlap(self, w1, w2):
+        s1 = set(w1) # length of subject in kb
+        s2 = set(w2)
+        return len(s1 & s2) / len(s1)
+
     def similarity_word_vector(self, w1, w2):
         try:
             e1, e2 = self.word_embedding[w1], self.word_embedding[w2]

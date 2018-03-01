@@ -61,8 +61,8 @@ if __name__ == '__main__':
         # remove duplicate possible_ids because different entities might have the same possible_id
         possible_ids = list(set(qry_possible_id_dict[qid+1]))
         tokens = ''.join(qry.tokens)
-        scores = [(sim.edit_distance(tokens, pid), pid) for pid in possible_ids]
-        scores = sorted(scores, key=lambda s: s[0])
+        scores = [(len(set(pid)), pid) for pid in possible_ids]
+        scores = sorted(scores, key=lambda s: -s[0])
         # for item in scores:
         #     print 'Score for ' + item[1] + ':', item[0]
         # raw_input('*****************\n')
@@ -70,10 +70,7 @@ if __name__ == '__main__':
         if len(scores) == 0:
             scores = [(0, tokens[0])]
 
-        fh.write('<question id=' + str(qid + 1) + '>\t')
-        fh.write(qry.query_origin + '\n')
-        # fh.write('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n')
-        possile_answers = []
+        total_answer_scores = []
         for rank in xrange(min(len(scores), 30)):
             pid = scores[rank][1]
             # pid = scores[0][1]
@@ -95,43 +92,49 @@ if __name__ == '__main__':
                 fh.write('<subject id=' + str(qid + 1) + '-' + str(rank) + '>\t')
                 fh.write(pid + '\n')
                 # fh.write('---------------------------------------------\n')
-            
+            possile_answers = []
             for idx, obj in enumerate(info):
                 attr, entity2 = obj
                 if 1:
                 # if attr == 'BaiduCARD': # only extract BaiduCard relation
-                    possile_answers.append({'pid': pid, 'answer': entity2})
-                    fh.write('---------------------------------------------\n')
-                    fh.write('<subject id=' + str(qid + 1) + '-' + str(rank) + '>\t')
-                    fh.write(pid + '\n')
-                    fh.write('<predicate id=' + str(qid + 1) + '-' + str(idx) + '>\t')
-                    fh.write(attr + '\n')
-                    fh.write('<object id=' + str(qid + 1) + '-' + str(idx) + '>\t')
-                    fh.write(entity2 + '\n')
+                    possile_answers.append({'pid': pid, 'answer': entity2, 'relation': attr})
                     if idx > 30:
                         break;
 
-        answer_scores = [(sim.similarity(qry.answer, item['answer']), item) for item in possile_answers]
-        # for item in answer_scores:
-        #     print 'Score for ' + item[1]['answer'] + ':', item[0]
-        answer_scores = sorted(answer_scores, key=lambda s: -s[0])
+            answer_scores = [(sim.similarity_customize_overlap(qry.answer, item['answer']), item) for item in possile_answers]
+            # print 'pid', pid
+            # for item in answer_scores:
+            #     print 'Score for ' + item[1]['answer'] + ':', item[0]
+            answer_scores = sorted(answer_scores, key=lambda s: -s[0])
+            total_answer_scores = total_answer_scores + answer_scores
+
         best_match, best_match_score = '[THIS-IS-AN-ANSWER.]', 0.0
-        if len(answer_scores) != 0:
-            best_match = answer_scores[0][1]['answer']
-            best_match_score = answer_scores[0][0]
+        if len(total_answer_scores) != 0:
+            best_match = total_answer_scores[0][1]['answer']
+            best_match_score = total_answer_scores[0][0]
 
+        fh.write('<question id=' + str(qid + 1) + '>\t')
+        fh.write(qry.query_origin + '\n')
+        
+        if len(total_answer_scores) != 0 and best_match_score !=0:
+            for idx, candidate in enumerate(total_answer_scores):
+                fh.write('---------------------------------------------\n')
+                fh.write('<subject id=' + str(qid + 1) + '-' + str(idx) + '>\t')
+                fh.write(candidate[1]['pid'] + '\n')
+                fh.write('<relation id=' + str(qid + 1) + '-' + str(idx) + '>\t')
+                fh.write(candidate[1]['relation'] + '\n')
+                fh.write('<object id=' + str(qid + 1) + '-' + str(idx) + '>\t')
+                fh.write(candidate[1]['answer'] + '\n')
 
-        fh.write('---------------------------------------------\n')
+            # fh.write('<best match subject id=' + str(qid + 1) + '>\t')
+            # fh.write(total_answer_scores[0][1]['pid'] + '\n')
+            # fh.write('<best match answer id=' + str(qid + 1) + '>\t')
         
-        if len(answer_scores) != 0 and best_match_score !=0:
-            fh.write('<best match subject id=' + str(qid + 1) + '>\t')
-            fh.write(answer_scores[0][1]['pid'] + '\n')
-            fh.write('<best match answer id=' + str(qid + 1) + '>\t')
-        
-            fh.write(best_match + '\n')
-            fh.write('<best match score id=' + str(qid + 1) + '>\t')
-            fh.write(str(best_match_score) + '\n')
+            # fh.write(best_match + '\n')
+            # fh.write('<best match score id=' + str(qid + 1) + '>\t')
+            # fh.write(str(best_match_score) + '\n')
         else:
+            fh.write('---------------------------------------------\n')
             fh.write('[NO-SUBJECT.]' + '\n')
         
         # print qid+1, best_match[1]
