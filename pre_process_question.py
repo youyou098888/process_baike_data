@@ -57,6 +57,10 @@ if __name__ == '__main__':
             processed_file_name = gl.processed_data_split_file_folder + folder_idx + 'zhidao_xa' + x + '.process-data'
             if not os.path.isfile(factoid_file_name):
                 continue
+            if os.path.isfile(processed_file_name):
+                continue
+            if not os.path.exists(gl.processed_data_split_file_folder + folder_idx):
+                os.makedirs(gl.processed_data_split_file_folder + folder_idx)
             testing_question_answer_pairs = ppq.process_question_answer_pairs(file_name=factoid_file_name)
             
             with open(processed_file_name, 'w') as f:

@@ -33,13 +33,14 @@ if __name__ == '__main__':
         folder_idx = 's_' + str("%04d" % fidx) + '/'
         for x in ascii_lowercase:
             question_file_name = gl.processed_data_split_file_folder + folder_idx + 'zhidao_xa' + x + '.process-data'
-            if not os.path.isfile(html_file_name):
+            if not os.path.isfile(question_file_name):
                 continue
             if not os.path.exists(gl.res_data_file_folder + folder_idx):
                 os.makedirs(gl.res_data_file_folder + folder_idx)
             result_file_name = gl.res_data_file_folder + folder_idx + 'zhidao_xa' + x + '.res-data'
             result_not_match_file_name = gl.res_data_file_folder + folder_idx + '.not_match.zhidao_xa' + x + '.res-data'
-
+            if os.path.isfile(result_file_name):
+                continue
             query_list = query.QueryList()
             query_list.read_query_file(question_file_name)
         

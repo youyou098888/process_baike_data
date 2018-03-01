@@ -9,6 +9,7 @@ from string import ascii_lowercase
 reload(sys)
 sys.setdefaultencoding('utf-8')
 from bs4 import BeautifulSoup
+import thread
 
 class HtmlFileProcess:
 	def __init__(self):
@@ -27,9 +28,9 @@ class HtmlFileProcess:
 				factoid = False
 		return factoid
 
-	def parse_file(self, file_name):
+	def parse_file(self, file_name, thread_name):
 		self.qa_pairs = []
-		print 'begin to parse file ', file_name
+		print thread_name, 'begin to parse file ', file_name
 		t1 = time.time()
 		fh = codecs.open(file_name, 'r', encoding='utf-8')
 		document = ''.join([x.strip('\n') for x in fh.readlines()])
@@ -38,7 +39,7 @@ class HtmlFileProcess:
 		question_raw = document.split('end raw')
 		for question_no, question_web in enumerate(question_raw):
 			if question_no % 100 == 0:
-				print 'Processed', question_no, 'pages'
+				print thread_name, 'Processed', question_no, 'pages'
 			soup = BeautifulSoup(question_web, 'html.parser')
 			if soup.title is None:
 				continue
@@ -64,7 +65,7 @@ class HtmlFileProcess:
 			if self.check_factoid(question_title_txt):
 				self.qa_pairs.append({'question': question_title_txt, 'answer': best_answer_txt})
 		t3 = time.time()
-		print 'Processing html file consumed', t3 - t2, 'seconds'
+		print thread_name, 'Processing html file consumed', t3 - t2, 'seconds'
 		
 
 	def show_first_n(self, first_n=20):
@@ -81,22 +82,41 @@ class HtmlFileProcess:
 			fh.write('====================================\n')
 		fh.close()
 
+def parse_thread( threadName, threadNo):
+	print threadName
+	for fidx in xrange(20):
+		if fidx % 4 == threadNo:
+			folder_idx = 's_' + str("%04d" % fidx) + '/'
+			print 'threadName is ', threadName, 'processing' , folder_idx, 'folder'
+			for x in ascii_lowercase:
+				html_file_name = gl.parse_html_folder + folder_idx + 'xa' + x
+				target_file_name = gl.zhidao_testing_data_folder_name + folder_idx + 'zhidao_xa' + x + '.fact.testing-data'
+				
+				if os.path.isfile(html_file_name):
+					if not os.path.exists(gl.zhidao_testing_data_folder_name + folder_idx):
+						os.makedirs(gl.zhidao_testing_data_folder_name + folder_idx)
+					if os.path.isfile(target_file_name):
+						# already generate this file pass
+						continue
+					print html_file_name, target_file_name
+					hfp.parse_file(file_name=html_file_name, thread_name=threadName)
+					# hfp.show_first_n()
+					hfp.generate_qa_file(file_name=target_file_name)
+				else:
+					pass
+					# print html_file_name, 'not exit'
+
+
 if __name__ == '__main__':
 	hfp = HtmlFileProcess()
-	for fidx in xrange(20):
-		folder_idx = 's_' + str("%04d" % fidx) + '/'
-		for x in ascii_lowercase:
-			html_file_name = gl.parse_html_folder + folder_idx + 'xa' + x
-			target_file_name = gl.zhidao_testing_data_folder_name + folder_idx + 'zhidao_xa' + x + '.fact.testing-data'
-			if not os.path.exists(gl.zhidao_testing_data_folder_name + folder_idx):
-				os.makedirs(gl.zhidao_testing_data_folder_name + folder_idx)
-			if os.path.isfile(target_file_name):
-				# already generate this file pass
-				continue
-			if os.path.isfile(html_file_name):
-				print html_file_name, target_file_name
-				hfp.parse_file(file_name=html_file_name)
-				# hfp.show_first_n()
-				hfp.generate_qa_file(file_name=target_file_name)
-			else:
-				print html_file_name, 'not exit'
+	# 创建两个线程
+	try:
+		thread.start_new_thread( parse_thread, ("Thread-1", 0, ) )
+		thread.start_new_thread( parse_thread, ("Thread-2", 1, ) )
+		thread.start_new_thread( parse_thread, ("Thread-3", 2, ) )
+		thread.start_new_thread( parse_thread, ("Thread-4", 3, ) )
+	except:
+		print "Error: unable to start thread"
+
+	while 1:
+		pass
