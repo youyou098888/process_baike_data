@@ -102,7 +102,7 @@ def entity_recog_thread(threadName, threadNo):
                             if idx > 30:
                                 break;
 
-                    answer_scores = [(sim.similarity_customize_overlap(qry.answer, item['answer']), item) for item in possile_answers]
+                    answer_scores = [(sim.similarity_customize_overlap(item['answer'], qry.answer), item) for item in possile_answers]
                     # print 'pid', pid
                     # for item in answer_scores:
                     #     print 'Score for ' + item[1]['answer'] + ':', item[0]
