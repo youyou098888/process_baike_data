@@ -85,7 +85,7 @@ class HtmlFileProcess:
 def parse_thread(threadName, threadNo):
 	hfp = HtmlFileProcess()
 	for fidx in xrange(20):
-		if fidx % 4 == threadNo:
+		if fidx % 20 == threadNo:
 			folder_idx = 's_' + str("%04d" % fidx) + '/'
 			print threadName, 'processing' , folder_idx, 'folder'
 			for x in ascii_lowercase:

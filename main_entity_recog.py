@@ -15,7 +15,7 @@ sys.setdefaultencoding('utf-8')
 
 def entity_recog_thread(threadName, threadNo):
     for fidx in xrange(20):
-        if fidx % 4 != threadNo:
+        if fidx % 20 != threadNo:
             continue
         folder_idx = 's_' + str("%04d" % fidx) + '/'
         for x in ascii_lowercase:
@@ -141,7 +141,7 @@ def entity_recog_thread(threadName, threadNo):
                 # print qid+1, best_match[1]
                 fh.write('==================================================\n')
 
-            print 'closing file'  
+            print 'closing file', result_file_name 
             fh.close()
             fh_nomatch.close()
 
