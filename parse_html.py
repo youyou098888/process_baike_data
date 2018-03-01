@@ -9,7 +9,7 @@ from string import ascii_lowercase
 reload(sys)
 sys.setdefaultencoding('utf-8')
 from bs4 import BeautifulSoup
-import thread
+import multiprocessing
 
 class HtmlFileProcess:
 	def __init__(self):
@@ -109,15 +109,12 @@ def parse_thread( threadName, threadNo):
 
 
 if __name__ == '__main__':
-	
-	# 创建两个线程
-	try:
-		thread.start_new_thread( parse_thread, ("Thread-1", 0, ) )
-		thread.start_new_thread( parse_thread, ("Thread-2", 1, ) )
-		thread.start_new_thread( parse_thread, ("Thread-3", 2, ) )
-		thread.start_new_thread( parse_thread, ("Thread-4", 3, ) )
-	except:
-		print "Error: unable to start thread"
-
-	while 1:
-		pass
+	pool = multiprocessing.Pool()
+	cpus = multiprocessing.cpu_count()
+	results = []
+	# 创建4个线程
+	for i in xrange(0, cpus):
+		result = pool.apply_async(parse_thread, args=("Thread-" + str(i+1), i,))
+		results.append(result)
+	pool.close()
+	pool.join()
