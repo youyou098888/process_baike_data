@@ -82,9 +82,8 @@ class HtmlFileProcess:
 			fh.write('====================================\n')
 		fh.close()
 
-def parse_thread( threadName, threadNo):
+def parse_thread(threadName, threadNo):
 	hfp = HtmlFileProcess()
-	print threadName
 	for fidx in xrange(20):
 		if fidx % 4 == threadNo:
 			folder_idx = 's_' + str("%04d" % fidx) + '/'
@@ -112,7 +111,7 @@ if __name__ == '__main__':
 	pool = multiprocessing.Pool()
 	cpus = multiprocessing.cpu_count()
 	results = []
-	# 创建4个线程
+	# 创建cpus个线程
 	for i in xrange(0, cpus):
 		result = pool.apply_async(parse_thread, args=("Thread-" + str(i+1), i,))
 		results.append(result)

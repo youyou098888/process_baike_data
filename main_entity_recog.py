@@ -7,29 +7,15 @@ import similarity
 import time
 import mention_id
 import knowledge_base
+import multiprocessing
 from string import ascii_lowercase
 reload(sys)
 sys.setdefaultencoding('utf-8')
 
-
-if __name__ == '__main__':
-    # Step1: load knowledge base
-    print 'begin to load kb'
-    kb = knowledge_base.KnowledgeBase()
-    kb.load_knowledge_base()
-    print 'finish loading kb'
-
-    # Step2: load mention2id
-    print 'begin to load mention2id'
-    mid = mention_id.MentionID()
-    mid.load_mention_2_id()
-    print 'finish loading mention2id'
-
-    # training phase
-
-    # Step3: load questions
-    print 'begin to load questions'
+def entity_recog_thread(threadName, threadNo):
     for fidx in xrange(20):
+        if fidx % 4 != threadNo:
+            continue
         folder_idx = 's_' + str("%04d" % fidx) + '/'
         for x in ascii_lowercase:
             question_file_name = gl.processed_data_split_file_folder + folder_idx + 'zhidao_xa' + x + '.process-data'
@@ -50,7 +36,7 @@ if __name__ == '__main__':
             sim = similarity.Similarity()
             for qid, qry in enumerate(query_list.query_list):
                 if qid % 100 == 0:
-                    print 'Processed', qid, 'questions'
+                    print threadName, 'Processed', qid, 'questions'
                 # print '||||'.join(qry.tokens)
                 # print 'entity:' + entity + 'len(entity):' + str(len(entity))
                 # print 'rest_token:', '----'.join(rest_token)
@@ -157,3 +143,34 @@ if __name__ == '__main__':
             print 'closing file'  
             fh.close()
             fh_nomatch.close()
+
+
+
+
+if __name__ == '__main__':
+    # Step1: load knowledge base
+    print 'begin to load kb'
+    kb = knowledge_base.KnowledgeBase()
+    kb.load_knowledge_base()
+    print 'finish loading kb'
+
+    # Step2: load mention2id
+    print 'begin to load mention2id'
+    mid = mention_id.MentionID()
+    mid.load_mention_2_id()
+    print 'finish loading mention2id'
+
+    # training phase
+
+
+    # Step3: load questions
+    print 'begin to load questions'
+    pool = multiprocessing.Pool()
+    cpus = multiprocessing.cpu_count()
+    results = []
+    # 创建cpus个线程
+    for i in xrange(0, cpus):
+        result = pool.apply_async(entity_recog_thread, args=("Thread-" + str(i+1), i,))
+        results.append(result)
+    pool.close()
+    pool.join()
