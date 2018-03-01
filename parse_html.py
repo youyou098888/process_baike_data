@@ -83,11 +83,12 @@ class HtmlFileProcess:
 		fh.close()
 
 def parse_thread( threadName, threadNo):
+	hfp = HtmlFileProcess()
 	print threadName
 	for fidx in xrange(20):
 		if fidx % 4 == threadNo:
 			folder_idx = 's_' + str("%04d" % fidx) + '/'
-			print 'threadName is ', threadName, 'processing' , folder_idx, 'folder'
+			print threadName, 'processing' , folder_idx, 'folder'
 			for x in ascii_lowercase:
 				html_file_name = gl.parse_html_folder + folder_idx + 'xa' + x
 				target_file_name = gl.zhidao_testing_data_folder_name + folder_idx + 'zhidao_xa' + x + '.fact.testing-data'
@@ -108,7 +109,7 @@ def parse_thread( threadName, threadNo):
 
 
 if __name__ == '__main__':
-	hfp = HtmlFileProcess()
+	
 	# 创建两个线程
 	try:
 		thread.start_new_thread( parse_thread, ("Thread-1", 0, ) )
