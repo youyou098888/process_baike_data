@@ -25,7 +25,7 @@ def entity_recog_thread(threadName, threadNo):
             if not os.path.exists(gl.res_data_file_folder + folder_idx):
                 os.makedirs(gl.res_data_file_folder + folder_idx)
             result_file_name = gl.res_data_file_folder + folder_idx + 'zhidao_xa' + x + '.res-data'
-            result_not_match_file_name = gl.res_data_file_folder + folder_idx + '.not_match.zhidao_xa' + x + '.res-data'
+            result_not_match_file_name = gl.res_data_file_folder + folder_idx + 'not_match.zhidao_xa' + x + '.res-data'
             if os.path.isfile(result_file_name):
                 continue
             query_list = query.QueryList()

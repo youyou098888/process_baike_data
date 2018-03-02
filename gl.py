@@ -1,7 +1,7 @@
 __author__ = 'yuyang'
 # KB
-knowledge_base_file_name = '../data/Baike/knowledge/baike.triples.kb'
-knowledge_base_mention_file_name = '../data/Baike/knowledge/baike.triples.mention2id'
+knowledge_base_file_name = '../data/Baike/knowledge/baike.triple.kb'
+knowledge_base_mention_file_name = '../data/Baike/knowledge/baike.triple.mention2id'
 # html file
 parse_html_folder = '../data/Baike/zhidao/'
 # question file
