@@ -46,7 +46,7 @@ class ExtractRelation:
     
     def filter_relation(self):
         for key, val in self.relations.items():
-            if val < 10:
+            if val < 30:
                 continue
             try:
                 self.filtered_relations[key] += val
@@ -73,6 +73,6 @@ if __name__ == '__main__':
             if not os.path.isfile(res_file_name):
                 continue
             er.extract_relation(res_file_name)
-        er.filter_relation()
+    er.filter_relation()
     er.save_relations('relations.txt')
             # break
