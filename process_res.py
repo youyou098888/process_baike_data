@@ -16,7 +16,7 @@ class ProcessResMerge:
         self.question_no = 0
 
     def get_qa_pairs(self, fq_file_name, fa_file_name):
-        
+        print 'processing file', fq_file_name
         fq = codecs.open(fq_file_name, 'r', encoding='utf-8')
         fa = codecs.open(fa_file_name, 'r', encoding='utf-8')
 
@@ -63,6 +63,7 @@ class ProcessResMerge:
             else:
                 print triples[0]
                 print 'no'
+        print 'generating file', fq_file_name + '-format'
             
 
 if __name__ == '__main__':
