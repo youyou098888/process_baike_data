@@ -19,7 +19,7 @@ class HtmlFileProcess:
 							  '最快', '最近', '最好', '最新', '原因是', '什么原因', '区别是']
 
 	def check_factoid(self, question):
-		factoid = False
+		factoid = True
 		for x in self.fact_word:
 			if x in question:
 				factoid = True
