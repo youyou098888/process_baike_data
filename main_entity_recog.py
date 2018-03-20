@@ -12,7 +12,12 @@ import multiprocessing
 from string import ascii_lowercase
 reload(sys)
 sys.setdefaultencoding('utf-8')
-
+'''
+    usage: python main_entity_recog.py
+    处理文件夹/data/Baike/process/中的数据，对分词的Q，找到KB中对应的实体。实体完全包含Q中的关键词。
+    根据答案与KB中subject的关系，排序三元组。
+    处理后文件夹/data/res/kbqa/
+'''
 def entity_recog_thread(threadName, threadNo):
     for fidx in xrange(20):
         if fidx % 20 != threadNo:
