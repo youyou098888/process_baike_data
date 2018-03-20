@@ -9,7 +9,13 @@ import codecs
 import re
 import json
 import operator
+'''
+    usage: python trans2model.py
+    把标注好的文件zhidao_question.txt转变为可以用于训练的数据文件json/zhidao_question_0x.json
+    同时会生成关系文件zhidao_question.relation
+    此文件可以放到processed_data目录下，直接用process_data.py文件处理后，输出模型训练
 
+'''
 reload(sys)
 sys.setdefaultencoding('utf8')
 
@@ -80,11 +86,13 @@ class Trans2ModelData:
         return json.dumps(train_dict)
 
     def get_train_data(self, fq_file_name):
+        self.train_data_list = []
         print 'processing file', fq_file_name
         fq = codecs.open(fq_file_name, 'r', encoding='utf-8')
         contents = [x.strip('\n') for x in fq.readlines()]
         for idx, line in enumerate(contents):
             self.train_data_list.append(self.format_line(line, idx))
+        print 'generating ', len(self.train_data_list), 'questions'
         fq.close()
 
     def save_train_data(self, ft_file_name):
@@ -102,6 +110,10 @@ class Trans2ModelData:
 
 if __name__ == '__main__':
     t2md = Trans2ModelData()
-    t2md.get_train_data(gl.zhidao_labeled_foler + 'zhidao_question_1000')
-    t2md.save_train_data(gl.zhidao_labeled_foler + 'zhidao_question_json_1000')
-    t2md.save_relation(gl.zhidao_labeled_foler + 'zhidao_question_relation_1000')
+    for fidx in xrange(0, 6):
+        fq_file_name = gl.zhidao_labeled_foler + 'zhidao_question_' + str("%02d" % fidx) + '.txt'
+        if not os.path.isfile(fq_file_name):
+            continue
+        t2md.get_train_data(fq_file_name)
+        t2md.save_train_data(gl.zhidao_labeled_foler + 'json/zhidao_question_' + str("%02d" % fidx) + '.json')
+    t2md.save_relation(gl.zhidao_labeled_foler + 'zhidao_question.relation')
