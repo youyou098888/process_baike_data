@@ -7,7 +7,18 @@ import gl
 import jieba
 import jieba.posseg as pseg
 from string import ascii_lowercase
-
+'''
+    usage: python pre_process_question.py
+    处理文件夹/data/Baike/testing/中的QA对，保留原始QA，对Q分词。
+    处理后文件夹/data/Baike/process/
+    格式为:
+            word自动恢复信息时间是什么意思
+            这个应该是如果WORD意外崩溃，而你未对文档做保存，安会自动给你恢复。相当于每10分钟做一个镜像。如果崩溃了，就恢复到最后一次镜像。好像是这样理解的。呵呵。
+            word    自动  恢复  复信  信息  时间  是   什么  意思
+            word    自动  恢复  信息  时间  是   什么  意思
+            ==================================================
+    程序中断后可以重跑（续跑），对于已经生成的文件，不再重新生成
+'''
 reload(sys)
 sys.setdefaultencoding('utf8')
 

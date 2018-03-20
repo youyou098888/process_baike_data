@@ -10,7 +10,13 @@ reload(sys)
 sys.setdefaultencoding('utf-8')
 from bs4 import BeautifulSoup
 import multiprocessing
-
+'''
+	usage: python parse_html.py
+	开启cpus个线程并行处理原始的html文档(/data/Baike/zhidao/)，从中提取出问题和答案
+	factoid=True: 忽略fact_word，处理后文件夹为/data/Baike/testing-factword/
+	factord=False: 只处理包含fact_word的问题，处理后文件夹为/data/Baike/testing/
+	程序中断后可以重跑（续跑），对于已经生成qa对的文件，不再重新生成
+'''
 class HtmlFileProcess:
 	def __init__(self):
 		self.qa_pairs = []
@@ -19,7 +25,7 @@ class HtmlFileProcess:
 							  '最快', '最近', '最好', '最新', '原因是', '什么原因', '区别是']
 
 	def check_factoid(self, question):
-		factoid = True
+		factoid = True # 是否只处理包含fact_word的问题
 		for x in self.fact_word:
 			if x in question:
 				factoid = True

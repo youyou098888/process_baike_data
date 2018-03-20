@@ -47,15 +47,23 @@ class ProcessResMerge:
                 question_idx = m.groups()[0]
                 question_txt = m.groups()[1]
                 try:
-                    # fa_pair_dict[question_idx]['answer']
-                    fnew.write(triples[0])
-                    fnew.write(fa_pair_dict[str(question_idx)]['answer'] + '\n')
-                    triples = triples[1:6] 
+                    # fnew.write(triples[0])
+                    # fnew.write(fa_pair_dict[str(question_idx)]['answer'] + '\n')
+                    triples = triples[1:11] 
                     for triple in triples:
-                        fnew.write('---------------------------------------------')
-                        fnew.write(triple)
-                        pass
-                    fnew.write('==================================================')
+                        # fnew.write('---------------------------------------------')
+                        # fnew.write(triple)
+                        # pass
+                        threearr = triple.split('\n')
+                        print fa_pair_dict[str(question_idx)]['answer'].split('\t')
+                        answer_txt = fa_pair_dict[str(question_idx)]['answer'].split('\t')[1]
+                        fnew.write(question_txt + '\t' + 
+                                   answer_txt + '\t' + 
+                                   threearr[1].split('\t')[1] + '\t' + 
+                                   threearr[2].split('\t')[1] + '\t' + 
+                                   threearr[3].split('\t')[1] + '\n')
+                    
+                    fnew.write('==================================================\n')
                 except Exception as e:
                     
                     print e
