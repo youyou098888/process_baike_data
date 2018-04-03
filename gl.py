@@ -17,9 +17,10 @@ testing_data_split_file_name = '../data/Baike/process/zhidao.test.process.data'
 
 embedding_file_name = '../data/Baike/model/dbqa/dbqa.word2vec'  # .txt
 # result file
-res_data_file_folder = '../data/res/kbqa/'
+res_data_file_folder = '../data/res/kbqa-factword/'
 training_data_result_file_name = '../data/res/kbqa/baike.training-data.res'
 testing_data_result_file_name = '../data/res/kbqa/baike.testing-data.res'
 testing_data_not_match_result_file_name = '../data/res/kbqa/baike.testing-data.not-match.res'
 # labeled file
 zhidao_labeled_foler = '../data/Baike/labeled/'
+zhidao_relation_foler = '../data/Baike/relation/'

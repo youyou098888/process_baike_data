@@ -13,6 +13,7 @@ import multiprocessing
 '''
 	usage: python parse_html.py
 	开启cpus个线程并行处理原始的html文档(/data/Baike/zhidao/)，从中提取出问题和答案
+	问题长度超过30个字的去掉
 	factoid=True: 忽略fact_word，处理后文件夹为/data/Baike/testing-factword/
 	factord=False: 只处理包含fact_word的问题，处理后文件夹为/data/Baike/testing/
 	程序中断后可以重跑（续跑），对于已经生成qa对的文件，不再重新生成
@@ -20,15 +21,17 @@ import multiprocessing
 class HtmlFileProcess:
 	def __init__(self):
 		self.qa_pairs = []
-		self.fact_word = ['是什么', '什么是', '什么叫', '是谁', '什么人']
+		self.fact_word = ['是什么', '什么是', '什么叫', '是谁', '什么人', '谁是', '什么意思']
 		self.non_fact_word = ['什么歌', '为什么', '怎么', '什么关系', '什么区别', '最著名', 
 							  '最快', '最近', '最好', '最新', '原因是', '什么原因', '区别是']
 
 	def check_factoid(self, question):
+		if len(question) > 90:
+			return False
 		factoid = True # 是否只处理包含fact_word的问题
 		for x in self.fact_word:
 			if x in question:
-				factoid = True
+				factoid = True 
 		for x in self.non_fact_word:
 			if x in question:
 				factoid = False
@@ -42,7 +45,8 @@ class HtmlFileProcess:
 		document = ''.join([x.strip('\n') for x in fh.readlines()])
 		t2 = time.time()
 		print 'Loading html file consumed', t2 - t1, 'seconds'
-		question_raw = document.split('end raw')
+		question_raw = document.split('**END**')
+		print 'file ', file_name, 'contains ', len(question_raw), 'raw questions'
 		for question_no, question_web in enumerate(question_raw):
 			if question_no % 100 == 0:
 				print thread_name, 'Processed', question_no, 'pages'
@@ -68,8 +72,22 @@ class HtmlFileProcess:
 				for answer_div in quality_answer_div:
 					best_answer_txt = answer_div.get_text()
 					found = True
+			if not found:
+				ordinary_answer_div = soup.findAll('div', {'class': ['bd', 'answer']})
+				for answer_div in ordinary_answer_div:
+					for answer in answer_div.findAll('pre', {'class': 'answer-text'}):
+						best_answer_txt = answer.get_text()
+						found = True
 			if self.check_factoid(question_title_txt):
 				self.qa_pairs.append({'question': question_title_txt, 'answer': best_answer_txt})
+				if best_answer_txt == 'No Best Answer Found':
+					try:
+						with open('../bad/' + question_title_txt + '.txt', 'w') as ff:
+							ff.write(question_web)
+					except Exception as e:
+						print e
+						pass
+
 		t3 = time.time()
 		print thread_name, 'Processing html file consumed', t3 - t2, 'seconds'
 		
@@ -114,12 +132,22 @@ def parse_thread(threadName, threadNo):
 
 
 if __name__ == '__main__':
-	pool = multiprocessing.Pool()
-	cpus = multiprocessing.cpu_count()
-	results = []
-	# 创建cpus个线程
-	for i in xrange(0, cpus):
-		result = pool.apply_async(parse_thread, args=("Thread-" + str(i+1), i,))
-		results.append(result)
-	pool.close()
-	pool.join()
+	if len(sys.argv) < 2:
+		print 'usage: \n' + 'python parse_html.py single\n' + 'python knowledge_base.py multiple\n'
+		quit()
+	if sys.argv[1] == 'single':
+		html_file_name = '../zhidao.data.sample'
+		target_file_name = '../zhidao.data.sample.target'
+		hfp = HtmlFileProcess()
+		hfp.parse_file(file_name=html_file_name, thread_name='single thread')
+		hfp.generate_qa_file(file_name=target_file_name)
+	else:
+		pool = multiprocessing.Pool()
+		cpus = multiprocessing.cpu_count()
+		results = []
+		# 创建cpus个线程
+		for i in xrange(0, cpus):
+			result = pool.apply_async(parse_thread, args=("Thread-" + str(i+1), i,))
+			results.append(result)
+		pool.close()
+		pool.join()
