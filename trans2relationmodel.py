@@ -12,7 +12,7 @@ import operator
 import random
 '''
     usage: python trans2relationmodel.py
-    把标注好的文件zhidao_question.txt转变为可以用于训练的数据文件json/zhidao_question_0x.json
+    把标注好的文件data/relation/zhidao_question_0x.txt转变为可以用于训练的数据文件data/relation/json/zhidao_question_0x.json
     json文件夹下的文件可以放到118上的qa/processed_data/zhidao/目录下，直接用python process_data.py文件处理后，
     输出模型训练关系,主要区别是可以生成db_match_signal.txt文件，这个文件是训练关系模型必须的文件。
 

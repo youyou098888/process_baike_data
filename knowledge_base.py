@@ -5,6 +5,8 @@ import gl
 import time
 import mention_id
 import jieba
+import pymongo
+import os
 reload(sys)
 sys.setdefaultencoding('utf-8')
 '''
@@ -28,6 +30,8 @@ class KnowledgeBase:
         self.fill_stop_words()
 
     def fill_stop_words(self):
+        if not os.path.isfile(gl.zhidao_labeled_foler + 'zhidao_question.relation'):
+            return
         # 用标注出来的关系丰富stop_words，这些词在识别三元组实体的时候过滤掉
         relations = []
         with open(gl.zhidao_labeled_foler + 'zhidao_question.relation') as fr:
@@ -119,8 +123,19 @@ class KnowledgeBase:
         t2 = time.time()
         print 'Generate mention2id file consumed', t2 - t1, 'seconds'
 
+    def search_from_mongodb(self, entity1):
+        con = pymongo.MongoClient()
+        coll = con.local.knowledge_graph
+        t1 = time.time()
+        # cursor = coll.find({'entity1':{'$regex':entity1}})
+        cursor = coll.find({'entity1':entity1})
+        for item in cursor:
+            # if item.predicate == 'Baidu'
+            print item['predicate'], item['entity2']
+        t2 = time.time()
+        print 'searching consumed', t2 - t1, 'seconds'
+
     def insert_to_mongodb(self):
-        import pymongo
         con = pymongo.MongoClient()
         coll = con.local.knowledge_graph
 
@@ -131,8 +146,6 @@ class KnowledgeBase:
             total_line_number += 1
             if line_no % 1000000 == 0:
                 print 'Processed', line_no, 'lines'
-            if line_no < 16078756:
-                continue
             try:
                 entity1, predicate, entity2 = line.rstrip().split('\t')
                 entity1 = entity1.replace('"', '')
@@ -166,6 +179,8 @@ if __name__ == '__main__':
     elif sys.argv[1] == 'generate_mention2id':
         kb.load_knowledge_base()
         kb.generate_mention2id()
+    else:
+        kb.search_from_mongodb(sys.argv[1])
 
     # mid = mention_id.MentionID()
     # mid.load_mention_2_id()
