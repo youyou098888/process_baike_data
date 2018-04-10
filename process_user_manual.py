@@ -88,14 +88,15 @@ def process_slots(item_dict_list):
 			if not verb or not noun:
 				continue # prevent sub_of itself
 			# sub_of relationship
-			a1 = graph.find_one(label=domain_label, property_key='name', property_value=noun)
-			if not a1:
-				a1 = Node(domain_label, name=noun)
-			b1 = graph.find_one(label=domain_label, property_key='name', property_value=(verb + noun))
-			if not b1:
-				b1 = Node(domain_label, name=(verb + noun))
-			a1b1 = Relationship(b1, 'sub_of', a1)
-			graph.create(a1b1)
+			if verb and noun:
+				a1 = graph.find_one(label=domain_label, property_key='name', property_value=noun)
+				if not a1:
+					a1 = Node(domain_label, name=noun)
+				b1 = graph.find_one(label=domain_label, property_key='name', property_value=(verb + noun))
+				if not b1:
+					b1 = Node(domain_label, name=(verb + noun))
+				a1b1 = Relationship(b1, 'sub_of', a1)
+				graph.create(a1b1)
 
 			# semantic_of relationship
 			a2 = graph.find_one(label=domain_k, property_key='name', property_value=item_dict['text'])

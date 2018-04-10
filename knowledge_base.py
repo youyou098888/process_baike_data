@@ -7,6 +7,8 @@ import mention_id
 import jieba
 import pymongo
 import os
+import model_eval as me
+import tensorflow as tf
 reload(sys)
 sys.setdefaultencoding('utf-8')
 '''
@@ -167,6 +169,21 @@ class KnowledgeBase:
         t2 = time.time()
         print 'saving knowledge base consumed', t2 - t1, 'seconds'
 
+    def get_entity(query):
+        task = dict(intent=0, tagging=0, joint=0)
+        task['tagging'] = 1
+        task['ques_type'] = 0
+        task['sys_intent'] = 0
+        task['slots_rw'] = 0
+        property = "<blank> <blank>"
+        joint_model = me.ModelEval(FLAGS.data_dir_joint, FLAGS.model_dir_joint, task)
+        intent, tagging, probabilities, ques_type, ques_type_probabilities, slots_rw, slots_rw_probabilities, sys_intent, sys_intent_probabilities, _ = joint_model.eval(query, property)
+        probabilities = [repr(probabilities[i]) for i in range(len(probabilities))]
+        
+        r = {"tagging": tagging}
+        print r
+
+
 
 if __name__ == '__main__':
     kb = KnowledgeBase()
@@ -180,6 +197,8 @@ if __name__ == '__main__':
         kb.load_knowledge_base()
         kb.generate_mention2id()
     else:
+        query = jieba.cut(sys.argv[1])
+        kb.get_entity(query)
         kb.search_from_mongodb(sys.argv[1])
 
     # mid = mention_id.MentionID()
